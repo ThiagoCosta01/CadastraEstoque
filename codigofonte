@@ -1,0 +1,40 @@
+#Funções
+def validaInt(min,max):
+  while True:
+    try:
+      esc = int(input("Escolha uma opção: "))
+      if min < esc > max:
+        print("Valor inválido.")
+        continue
+    except:
+      print("opção inválida, tente novamente: ")
+      continue
+    else:
+      return esc
+      break
+    
+#Vars
+cadastros = [{"marca":[],"andar":[]}]
+#Main
+while True:
+  print("MENU") 
+  print("(1) - Pesquisar.")
+  print("(2) - Todos cadastros.")
+  print("(3) - Novo cadastro.")
+  print("(4) - Excluir.")
+  print("(5) - Sair.")
+  esc = validaInt(1,5)
+  if esc == 1:
+    print("Pesquisar.")
+  elif esc == 2:
+    print("Cadastros: ")
+    print()
+
+  elif esc == 3:
+    print("Cadastrar: ")
+    marca = input("Marca: ")
+    andar = input("Andar: ")
+    cadastros.append("marca")
+    cadastros.append("marca")
+  elif esc == 5:
+    break
