@@ -1,77 +1,99 @@
-cadastros = []
-contador = 0
+def verificaArquivo(arquivo):
+  try:
+    a = open(arquivo, 'rt')
+    a.close()
+  except:
+    print("Arquivo não localizado")
+    return False
+  else:
+    print("Arquivo existente.")
+    return True
 
-#Funções:
-def cadastrarPeca(codigo):
-    print(f"Peça {codigo}.")
-    nome = input("Digite o nome da peça: ")
-    fabricante = input("Digite a fabricante da peça: ")
-    valor = int(input("Digite o preço da peça: "))
-    while valor < 0 or not valor:
-        print("Valor inválido. Tente novamente.")
-        valor = int(input("Digite o preço da peça: "))
-    dicionario = {"codigo":codigo,"nome":nome, "fabricante":fabricante, "valor":valor}
-    cadastros.append(dicionario.copy())
+def criaArquivo(arquivo):
+  try:
+    a = open(arquivo, 'wt+')
+  except:
+    print("Não foi possível criar o arquivo.")
+    return False
+  else:
+    print("Arquivo criado com sucesso.")
+    return True
+  finally:
+    a.close()
 
-def consultar():
-    while True:
-        print("1 - Consultar todas as peças")
-        print("2 - Consulta Peças por Código")
-        print("3 - Consulta Peças por Fabricante")
-        print("4 - Retornar ")
-        try:
-            escolha = int(input("Digite uma opção: "))
-        except:
-            print("Opção inválida.")
-            continue
-        if escolha == 1:
-            for dicionarios in cadastros:
-                for key,value in dicionarios.items():
-                    print('{} : {}'.format(key, value))
-        elif escolha == 2:
-            codPesquisa = int(input("Digite o código da peça: "))
-            for dicionarios in cadastros:
-                if dicionarios["codigo"]== codPesquisa:
-                    for key,value in dicionarios.items():
-                     print('{} : {}'.format(key, value))
-        elif escolha == 3:
-            codPesquisa = input("Digite o nome da fabricante: ")
-            for dicionarios in cadastros:
-                if dicionarios["fabricante"] == codPesquisa:
-                    for key,value in dicionarios.items():
-                     print('{} : {}'.format(key, value))
-        elif escolha == 4:
-            print("Retornando ao menu principal.\n")
-            break
-        else:
-            print("Opção inválida. ")
-            continue
-
-def removerPeca():
-    codRemov = int(input("Código da peça que deseja remover: "))
-    for dicionarios in cadastros:
-        if dicionarios["codigo"] == codRemov:
-            cadastros.remove(dicionarios)
-
-#Programa Principal
-while True:
+def cadastrar(arquivo, nomeItem, localitem):
     try:
-        print("Bicicletaria do Thiago Lucas Silveira Costa.")
-        print("1 - Cadastrar peça")
-        print("2 - Consultar peças")
-        print("3 - Remover peça")
-        print("4 - Sair")
-        escolha = int(input("Escolha a opção desejada: "))
+        a = open(arquivo, 'at')
     except:
-        print("Opção inválida.")
-        continue
-    if escolha == 1:
-        contador = contador + 1
-        cadastrarPeca(contador)
-        continue
-    elif escolha == 2:
-        consultar()
-    elif escolha == 3:
-        removerPeca()
-    elif escolha == 4:
-        break
+        print("Erro ao abrir arquivo.")
+    else:
+       a.write(f"Marca: {nomeItem.upper()} | Andar: {localitem.upper()}\n")
+    finally:
+        a.close()
+
+def listagem(arquivo):
+  try:
+    a = open(arquivo, 'rt')
+  except:
+    print("Erro na listagem.")
+  else:
+    print(a.read())
+  finally:
+    a.close()
+
+def pesquisar(arquivo):
+  try:
+    a = open(arquivo,'rt')
+  except:
+    print("Erro na pesquisa.")
+  else:
+    print(a.readlines())
+  finally:
+    a.close()
+
+a = "marcascadastradas.txt"
+
+v = verificaArquivo(a)
+if v == False:
+  criaArquivo(a)
+
+with open(a, 'r') as arquivo:
+  mensagem = arquivo.readlines()
+
+while True:
+  print("***MENU***")
+  print("(1) Pesquisar")
+  print("(2) Cadastrar nova marca")
+  print("(3) Listar todos cadastros")
+  print("(4) Sair")
+
+  try:
+    op = int(input("Digite uma opção: "))
+  except ValueError:
+    print("Opção inválida. Tente novamente.")
+    continue
+  except:
+    print("Erro. Digite novamente.")
+    continue
+
+  if op == 1:
+    pes = input("Pesquisar: ")
+    for linha in mensagem:
+      if pes.upper() in linha:
+        print(linha)
+        bot = input("...")
+        if bot:
+         continue
+
+  elif op == 2:
+      marca = input("Marca: ")
+      local = input("Andar (1/2/3 ou 4-outro): ")
+      cadastrar(a, marca, local)
+      print(f"Cadastro realizado.\n{marca.upper()}, {local}° andar.")
+
+  elif op == 3:
+    listagem(a)
+
+  elif op == 4:
+    print("Encerrando o programa...")
+    break
